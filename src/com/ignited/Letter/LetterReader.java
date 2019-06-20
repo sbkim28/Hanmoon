@@ -13,7 +13,7 @@ public class LetterReader {
     private static final Logger LOGGER = Logger.getLogger(LetterReader.class.getName());
 
     public static List<Letter> read(String name) throws IOException {
-        InputStream is = LetterReader.class.getResourceAsStream("./" + name);
+        InputStream is = LetterReader.class.getResourceAsStream(name);
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
         String s;
