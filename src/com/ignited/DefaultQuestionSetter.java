@@ -32,4 +32,14 @@ public class DefaultQuestionSetter implements QuestionSetter{
         ret.append("음:'").append(letter.getSound()).append("', 뜻:'").append(letter.getMeaning()).append("', 걸린 시간 (초):").append(ms/1000).append("\n");
         return ret.toString();
     }
+
+    @Override
+    public String getCurcuit(int i) {
+        return "===" + i+ "번째 반복===";
+    }
+
+    @Override
+    public String getDone(int i) {
+        return "종료. 반복횟수 : " + i;
+    }
 }

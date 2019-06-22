@@ -2,63 +2,81 @@ package com.ignited;
 
 import com.ignited.Letter.Letter;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class LetterQuestioner {
 
     private List<Letter> lList;
     private Statisticalizer s;
     private QuestionSetter qs;
+    private String exitCode;
 
     public LetterQuestioner(List<Letter> lList) {
         this.lList = lList;
         s = new Statisticalizer();
         s.initialize(lList);
+        exitCode = "EXIT";
+        qs = new DefaultQuestionSetter();
     }
 
-    public LetterQuestioner(List<Letter> lList, Statisticalizer statisticalizer) {
-        this.lList = lList;
-        this.s = statisticalizer;
-    }
-
-    public void getQuestion(Random random){
-        int r = random.nextInt(s.getFailSum());
-        Letter letter = s.getLetter(r);
-        String q;
-        String a;
-        if(qs == null){
-            q = String.valueOf(letter.getChinese());
-            a = String.valueOf(letter.getSound());
-        }else{
-            qs.setLetter(letter);
-            q = qs.getQuestion();
-            a = qs.getAnswer();
+    public void loopRandomQuesion(Random random){
+        while (true) {
+            if (!(randomQuestion(random))) break;
         }
+    }
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public boolean randomQuestion(Random random) {
+        double r = s.getQSum() * random.nextDouble();
+        Letter letter = s.getLetter(r);
+        int info = question(letter);
+        if(info == -1) return false;
+        s.setResult(info != 0);
+        return true;
+    }
+    private int question(Letter letter){
+        qs.setLetter(letter);
+        String q = qs.getQuestion();
+        String a = qs.getAnswer();
+
+        System.out.println(q);
+        boolean b;
+        long ms = System.currentTimeMillis();
         try {
-            System.out.println(q);
-            boolean b;
-            long ms = System.currentTimeMillis();
-            while (true) {
-                if (br.ready()) {
-                    b = a.equals(br.readLine());
-                    ms = System.currentTimeMillis() - ms;
-                    break;
-                }
+            String line = SystemReader.read();
+            if (exitCode.equals(line)) {
+                return -1;
             }
-            if(qs == null){
-                System.out.println(b + ", " + (ms/1000));
-            }else {
-                System.out.println(qs.getResult(b, ms));
-            }
-            s.setResult(b);
+            b = a.equals(line);
+            ms = System.currentTimeMillis() - ms;
+            System.out.println(qs.getResult(b, ms));
+            return b ? 1 : 0;
         } catch (IOException e) {
             e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public void entireQuestion(Random random){
+
+        List<Letter> list = new ArrayList<>(lList);
+        int i=0;
+        OUT : while (true){
+            Collections.shuffle(list, random);
+            System.out.println(qs.getCurcuit(++i));
+            Iterator<Letter> iterator = list.iterator();
+            while (iterator.hasNext()){
+                int result = question(iterator.next());
+                if(result == -1){
+                     break OUT;
+                } else if(result!= 0){
+                    iterator.remove();
+                }
+            }
+            if(list.size() == 0){
+                System.out.println(qs.getDone(i));
+                break;
+            }
         }
     }
 

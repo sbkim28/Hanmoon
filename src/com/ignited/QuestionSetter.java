@@ -8,5 +8,7 @@ public interface QuestionSetter {
     String getQuestion();
     String getAnswer();
     String getResult(boolean b, long ms);
+    String getCurcuit(int i);
+    String getDone(int i);
 
 }

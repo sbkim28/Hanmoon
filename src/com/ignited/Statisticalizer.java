@@ -19,18 +19,19 @@ public class Statisticalizer {
         }
     }
 
-    public int getFailSum(){
-        int ret = 0;
+    public double getQSum(){
+        double ret = 0;
         for (Value v : values){
-            ret += v.fail + 1;
+            ret += (double) v.fail/ v.success;
         }
+
         return ret;
     }
 
-    public Letter getLetter(int index){
+    public Letter getLetter(double index){
         int cursor = 0;
         for (Value v : values){
-            index -= 1 + v.fail;
+            index -= (double) v.fail/ v.success;;
             if(index < 0){
                 value = v;
                 return v.letter;
@@ -49,6 +50,8 @@ public class Statisticalizer {
         int fail;
         Value(Letter letter){
             this.letter = letter;
+            success = 1;
+            fail = 1;
         }
 
         void result(boolean b){

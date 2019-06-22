@@ -14,7 +14,7 @@ public class LetterReader {
 
     public static List<Letter> read(String name) throws IOException {
         InputStream is = LetterReader.class.getResourceAsStream(name);
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 
         String s;
         int line_number = 0;
@@ -22,7 +22,7 @@ public class LetterReader {
 
         while((s = br.readLine()) != null){
             line_number++;
-            String[] d = s.split(", ");
+            String[] d = s.split("& ");
             if(d.length !=3){
                 LOGGER.warning(s + ", invalid format. (line number:" + line_number + ")");
                 continue;

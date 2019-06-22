@@ -19,8 +19,27 @@ public class RUN {
         }
         LetterQuestioner lq = new LetterQuestioner(lList);
         lq.setQuestionSetter(new DefaultQuestionSetter());
-        while (true) {
-            lq.getQuestion(random);
+        try {
+            while (true) {
+                System.out.println("한문 테스트");
+                System.out.println("랜덤단어테스트 : 1");
+                System.out.println("전체도전 : 2");
+                System.out.println("종료 : 3");
+
+                String l = SystemReader.read();
+                if(l.equals("1")) {
+                    lq.loopRandomQuesion(random);
+                }else if(l.equals("2")) {
+                    lq.entireQuestion(random);
+                }else if(l.equals("3")){
+                    System.exit(0);
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
+
 }
